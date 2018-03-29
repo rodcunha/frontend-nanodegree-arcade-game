@@ -141,6 +141,7 @@ console.log(Player);
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
+
 var enemyOne = new Enemy();
 console.log(enemyOne);
 
@@ -158,7 +159,7 @@ document.addEventListener('keyup', function (e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-},{}],26:[function(require,module,exports) {
+},{}],28:[function(require,module,exports) {
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -327,5 +328,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},[26,9])
+},{}]},{},[28,9])
 //# sourceMappingURL=/app.176c1529.map

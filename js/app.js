@@ -50,9 +50,9 @@ console.log(Player);
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
+
 let enemyOne = new Enemy();
 console.log(enemyOne);
-enemyOne.render();
 
 const allEnemies = [];
 
