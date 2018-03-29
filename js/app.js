@@ -52,6 +52,7 @@ console.log(Player);
 
 let enemyOne = new Enemy();
 console.log(enemyOne);
+enemyOne.render();
 
 const allEnemies = [];
 

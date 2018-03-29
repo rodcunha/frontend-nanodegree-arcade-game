@@ -19,6 +19,7 @@
   "homepage": "https://github.com/rodcunha/frontend-nanodegree-arcade-game#readme",
   "dependencies": {
     "babel-preset-env": "^1.6.1",
+    "js": "^0.1.0",
     "node-sass": "^4.8.3"
   },
   "devDependencies": {
