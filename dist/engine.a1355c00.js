@@ -77,189 +77,7 @@ parcelRequire = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({24:[function(require,module,exports) {
-/* Resources.js
- * This is simply an image loading utility. It eases the process of loading
- * image files so that they can be used within your game. It also includes
- * a simple "caching" layer so it will reuse cached images if you attempt
- * to load the same image multiple times.
- */
-(function () {
-    var resourceCache = {};
-    var loading = [];
-    var readyCallbacks = [];
-
-    /* This is the publicly accessible image loading function. It accepts
-     * an array of strings pointing to image files or a string for a single
-     * image. It will then call our private image loading function accordingly.
-     */
-    function load(urlOrArr) {
-        if (urlOrArr instanceof Array) {
-            /* If the developer passed in an array of images
-             * loop through each value and call our image
-             * loader on that image file
-             */
-            urlOrArr.forEach(function (url) {
-                _load(url);
-            });
-        } else {
-            /* The developer did not pass an array to this function,
-             * assume the value is a string and call our image loader
-             * directly.
-             */
-            _load(urlOrArr);
-        }
-    }
-
-    /* This is our private image loader function, it is
-     * called by the public image loader function.
-     */
-    function _load(url) {
-        if (resourceCache[url]) {
-            /* If this URL has been previously loaded it will exist within
-             * our resourceCache array. Just return that image rather
-             * re-loading the image.
-             */
-            return resourceCache[url];
-        } else {
-            /* This URL has not been previously loaded and is not present
-             * within our cache; we'll need to load this image.
-             */
-            var img = new Image();
-            img.onload = function () {
-                /* Once our image has properly loaded, add it to our cache
-                 * so that we can simply return this image if the developer
-                 * attempts to load this file in the future.
-                 */
-                resourceCache[url] = img;
-
-                /* Once the image is actually loaded and properly cached,
-                 * call all of the onReady() callbacks we have defined.
-                 */
-                if (isReady()) {
-                    readyCallbacks.forEach(function (func) {
-                        func();
-                    });
-                }
-            };
-
-            /* Set the initial cache value to false, this will change when
-             * the image's onload event handler is called. Finally, point
-             * the image's src attribute to the passed in URL.
-             */
-            resourceCache[url] = false;
-            img.src = url;
-        }
-    }
-
-    /* This is used by developers to grab references to images they know
-     * have been previously loaded. If an image is cached, this functions
-     * the same as calling load() on that URL.
-     */
-    function get(url) {
-        return resourceCache[url];
-    }
-
-    /* This function determines if all of the images that have been requested
-     * for loading have in fact been properly loaded.
-     */
-    function isReady() {
-        var ready = true;
-        for (var k in resourceCache) {
-            if (resourceCache.hasOwnProperty(k) && !resourceCache[k]) {
-                ready = false;
-            }
-        }
-        return ready;
-    }
-
-    /* This function will add a function to the callback stack that is called
-     * when all requested images are properly loaded.
-     */
-    function onReady(func) {
-        readyCallbacks.push(func);
-    }
-
-    /* This object defines the publicly accessible functions available to
-     * developers by creating a global Resources object.
-     */
-    window.Resources = {
-        load: load,
-        get: get,
-        onReady: onReady,
-        isReady: isReady
-    };
-})();
-},{}],25:[function(require,module,exports) {
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// Enemies our player must avoid
-var Enemy = function Enemy() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
-};
-
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function (dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-};
-
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function () {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
-var player = new (function () {
-    function Player() {
-        _classCallCheck(this, Player);
-    }
-
-    _createClass(Player, [{
-        key: 'update',
-        value: function update() {}
-    }, {
-        key: 'render',
-        value: function render() {}
-    }, {
-        key: 'handleInput',
-        value: function handleInput() {}
-    }]);
-
-    return Player;
-}())();
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
-var allEnemies = [];
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function (e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
-
-    player.handleInput(allowedKeys[e.keyCode]);
-});
-},{}],26:[function(require,module,exports) {
+})({5:[function(require,module,exports) {
 var global = (1,eval)("this");
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
@@ -440,46 +258,7 @@ var Engine = function (global) {
    */
   global.ctx = ctx;
 }(this);
-},{}],15:[function(require,module,exports) {
-'use strict';
-
-var _resources = require('/js/resources');
-
-var _resources2 = _interopRequireDefault(_resources);
-
-var _app = require('/js/app');
-
-var _app2 = _interopRequireDefault(_app);
-
-var _engine = require('/js/engine');
-
-var _engine2 = _interopRequireDefault(_engine);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Get the modal
-var modal = document.getElementById('start-game');
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal
-window.onload = function () {
-    modal.style.display = "block";
-};
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function () {
-    modal.style.display = "none";
-};
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-};
-},{"/js/resources":24,"/js/app":25,"/js/engine":26}],31:[function(require,module,exports) {
+},{}],8:[function(require,module,exports) {
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -509,7 +288,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61092' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57103' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
@@ -648,5 +427,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},[31,15])
-//# sourceMappingURL=/frontend-nanodegree-arcade-game.3a755934.map
+},{}]},{},[8,5])
+//# sourceMappingURL=/engine.a1355c00.map

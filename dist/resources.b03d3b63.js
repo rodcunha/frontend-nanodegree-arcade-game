@@ -77,7 +77,7 @@ parcelRequire = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({7:[function(require,module,exports) {
+})({3:[function(require,module,exports) {
 /* Resources.js
  * This is simply an image loading utility. It eases the process of loading
  * image files so that they can be used within your game. It also includes
@@ -190,7 +190,7 @@ parcelRequire = (function (modules, cache, entry) {
         isReady: isReady
     };
 })();
-},{}],13:[function(require,module,exports) {
+},{}],8:[function(require,module,exports) {
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -220,7 +220,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61092' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57103' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
@@ -359,5 +359,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},[13,7])
+},{}]},{},[8,3])
 //# sourceMappingURL=/resources.b03d3b63.map

@@ -77,74 +77,78 @@ parcelRequire = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({7:[function(require,module,exports) {
-var bundleURL = null;
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
+})({4:[function(require,module,exports) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  return bundleURL;
-}
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
+// Enemies our player must avoid
+var Enemy = function Enemy() {
+    // Variables applied to each of our instances go here,
+    // we've provided one for you to get started
 
-  return '/';
-}
+    // The image/sprite for our enemies, this uses
+    // a helper we've provided to easily load images
+    this.sprite = 'images/enemy-bug.png';
+};
 
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
+// Update the enemy's position, required method for game
+// Parameter: dt, a time delta between ticks
+Enemy.prototype.update = function (dt) {
+    // You should multiply any movement by the dt parameter
+    // which will ensure the game runs at the same speed for
+    // all computers.
+};
 
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],6:[function(require,module,exports) {
-var bundle = require('./bundle-url');
+// Draw the enemy on the screen, required method for game
+Enemy.prototype.render = function () {};
 
-function updateLink(link) {
-  var newLink = link.cloneNode();
-  newLink.onload = function () {
-    link.remove();
-  };
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
+// Now write your own player class
+// This class requires an update(), render() and
+// a handleInput() method.
 
-var cssTimeout = null;
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
+var player = new (function () {
+    function Player() {
+        _classCallCheck(this, Player);
 
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
+        this.sprite = 'images/char-boy.png';
     }
 
-    cssTimeout = null;
-  }, 50);
-}
+    _createClass(Player, [{
+        key: 'update',
+        value: function update() {}
+    }, {
+        key: 'render',
+        value: function render() {
+            ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        }
+    }, {
+        key: 'handleInput',
+        value: function handleInput() {}
+    }]);
 
-module.exports = reloadCSS;
-},{"./bundle-url":7}],2:[function(require,module,exports) {
+    return Player;
+}())();
 
-        var reloadCSS = require('_css_loader');
-        module.hot.dispose(reloadCSS);
-        module.hot.accept(reloadCSS);
-      
-},{"_css_loader":6}],8:[function(require,module,exports) {
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+// Place the player object in a variable called player
+
+var allEnemies = [];
+
+// This listens for key presses and sends the keys to your
+// Player.handleInput() method. You don't need to modify this.
+document.addEventListener('keyup', function (e) {
+    var allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down'
+    };
+
+    player.handleInput(allowedKeys[e.keyCode]);
+});
+},{}],8:[function(require,module,exports) {
 
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -313,5 +317,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},[8])
-//# sourceMappingURL=/style.34f3ccd7.map
+},{}]},{},[8,4])
+//# sourceMappingURL=/app.5a20e6ec.map

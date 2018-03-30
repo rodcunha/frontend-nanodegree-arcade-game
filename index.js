@@ -3,12 +3,12 @@ import app from '/js/app';
 import engine from '/js/engine';
 
 // Get the modal
-var modal = document.getElementById('startGame');
+var modal = document.getElementById('start-game');
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks on the button, open the modal
+// When the user clicks the button, open the modal
 window.onload = function() {
     modal.style.display = "block";
 }
