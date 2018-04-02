@@ -203,7 +203,7 @@ function reachedWater() {
   //console.log(player.y);
   if (player.y == -15) {
     score += 100;
-    scoreElem.innerText(score);
+    scoreElem.innerText = score;
     player.resetPosition();
   }
 }
@@ -215,6 +215,7 @@ var detectCollision = function() {
     if ( (enemy.y === player.y) || (enemy.x === player.x) ) {
       lives -=1;
       player.resetPosition();
+      livesElem.innerText = lives;
     }
   })
 
