@@ -30,12 +30,26 @@ const livesElem = document.querySelector('#lives');
 let gotToWater = 0;
 let lives = 3;
 let score = 0;
-let enemySpeed = 10;
+let enemySpeed;
+
+var random_speed = () => {
+    return Math.floor(Math.random() * 10) + 5;
+};
+
+var random_x = () => {
+    return Math.floor(Math.random() * (200)) - 500;
+};
+
+var random_y = () => {
+    var positions = [55, 137, 220];
+    return positions[Math.floor(Math.random() * 3)];
+};
 
 class Enemy {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
+  constructor() {
+    this.x = random_x();
+    this.y = random_y();
+    this.speed = random_speed();
     this.sprite = 'images/enemy-bug.png';
     this.position = parseInt(Math.random()*300-500);
   }
@@ -49,18 +63,9 @@ class Enemy {
   // set the speed of the enemy
   movement() {
     while (this.x <= 550) {
-      setInterval( () => { this.x += 1 }, 8 );
+      setInterval( () => { this.x += 1 }, this.speed );
       break;
     }
-  }
-  // Reset the enemies when these reach the end of the canvas
-  resetEnemy() {
-     allEnemies.forEach(function(enemy) {
-       console.log(this.x);
-       if (this.x > 550) {
-         this.x = parseInt(Math.random()*100-200);
-       }
-   });
   }
 }
 
@@ -70,8 +75,8 @@ class TopEnemy extends Enemy {
        this.x = this.position + x;
        console.log(this.x);
        this.y = 55;
-       this.movement();
-       this.resetEnemy();
+       this.movement(this.speed);
+       resetEnemy();
   }
 }
 class MiddleEnemy extends Enemy {
@@ -91,20 +96,19 @@ class BottomEnemy extends Enemy {
   }
 }
 
-// class MiddleEnemy extends Enemy {
-//   constructor() {
-//     this.y = 200;
-//   }
-// }
-// class BottomEnemy extends Enemy {
-//   constructor() {
-//     this.y = 300;
-//   }
-// }
+// Reset the enemies when these reach the end of the canvas
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+  function resetEnemy() {
+     allEnemies.forEach(function(enemy) {
+       console.log(enemy.x);
+       setTimeout(function() {
+       if (enemy.x > 550) {
+         enemy.x = parseInt(Math.random()*100-200);
+       }
+     }, 5000);
+   });
+  }
+
 
 class Player {
   constructor(x, y) {
@@ -169,31 +173,60 @@ const player = new Player;
 // make them move at random speen, when they get to x=500 reset them randomly
 
 const allEnemies = [];
-const numEnemies = 6;
+//const numEnemies = 2;
 
- for (i = 0; i < numEnemies; i++) {
-     setTimeout(function() {
-         allEnemies[i] = new TopEnemy(0);
-         i++;
-     }, i * 3000);
-     //enemy[i].push(allEnemies);
-   }
- for (i = 0; i < numEnemies; i++) {
-     setTimeout(function() {
-         allEnemies[i] = new MiddleEnemy(100);
-         i++;
-     }, i * 3000);
-     //enemy[i].push(allEnemies);
-   }
- for (i = 0; i < numEnemies; i++) {
-     setTimeout(function() {
-         allEnemies[i] = new BottomEnemy(200);
-         i++;
-     }, i * 3000);
-     //enemy[i].push(allEnemies);
-   }
- console.log(allEnemies);
 
+ // for (i = 0; i < numEnemies; i++) {
+ //     setTimeout(function() {
+ //         allEnemies[i] = new TopEnemy(0, enemySpeed);
+ //         i++;
+ //     }, i * 3000);
+ //     //enemy[i].push(allEnemies);
+ //   }
+ // for (i = 0; i < numEnemies; i++) {
+ //     setTimeout(function() {
+ //         allEnemies[i] = new MiddleEnemy(100, enemySpeed);
+ //         i++;
+ //     }, i * 3000);
+ //     //enemy[i].push(allEnemies);
+ //   }
+ // for (i = 0; i < numEnemies; i++) {
+ //     setTimeout(function() {
+ //         allEnemies[i] = new BottomEnemy(200, enemySpeed);
+ //         i++;
+ //     }, i * 3000);
+ //     //enemy[i].push(allEnemies);
+ //   }
+ // console.log(allEnemies);
+
+
+
+var create_enemies = (num) => {
+  var bugs = num;
+
+  for (var i = 0; i < bugs; i++) {
+      var bug = new Enemy();
+      bug.speed = random_speed();
+      bug.y = random_y();
+      bug.x = random_x();
+
+      // push to array
+      allEnemies.push(bug);
+    }
+};
+create_enemies(5);
+
+//add movement to the bugs
+for (i = 0; i < allEnemies.length; i++) {
+  function setDelay() {
+    setTimeout(() => {
+      console.log(allEnemies[0]);
+      i++
+      if (i < allEnemies.length) { setDelay(); }
+    }, 1000);
+  }
+  setDelay();
+}
 
 
 
@@ -211,7 +244,7 @@ function reachedWater() {
 
 var detectCollision = function() {
   allEnemies.forEach( enemy => {
-    if ( (enemy.y === player.y) || (enemy.x === player.x) ) {
+    if ( (enemy.y == player.y  ) || (enemy.x === player.x) ) {
       lives -=1;
       player.resetPosition();
       livesElem.innerText = lives;
