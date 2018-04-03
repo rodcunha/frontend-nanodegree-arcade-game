@@ -30,7 +30,7 @@ const livesElem = document.querySelector('#lives');
 let gotToWater = 0;
 let lives = 3;
 let score = 0;
-let enemySpeed;
+
 
 var random_speed = () => {
     return Math.floor(Math.random() * 10) + 5;
@@ -217,16 +217,16 @@ var create_enemies = (num) => {
 create_enemies(5);
 
 //add movement to the bugs
-for (i = 0; i < allEnemies.length; i++) {
+var counter = 0
   function setDelay() {
     setTimeout(() => {
-      console.log(allEnemies[0]);
-      i++
-      if (i < allEnemies.length) { setDelay(); }
+      allEnemies[counter].movement()
+      counter++
+      if (counter < allEnemies.length) { setDelay(); }
     }, 1000);
   }
+
   setDelay();
-}
 
 
 
