@@ -37,7 +37,7 @@ class Enemy {
     this.x = x;
     this.y = y;
     this.sprite = 'images/enemy-bug.png';
-    this.speed = parseInt(Math.random()*300+50);
+    this.position = parseInt(Math.random()*300-500);
   }
   update() {
     Enemy.prototype.update = function(dt) {
@@ -46,41 +46,46 @@ class Enemy {
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
+  // set the speed of the enemy
   movement() {
     while (this.x <= 550) {
       setInterval( () => { this.x += 1 }, 8 );
       break;
     }
   }
+  // Reset the enemies when these reach the end of the canvas
+  resetEnemy() {
+     allEnemies.forEach(function(enemy) {
+       console.log(this.x);
+       if (this.x > 550) {
+         this.x = parseInt(Math.random()*100-200);
+       }
+   });
+  }
 }
-
-const enemyReset = () => {
-  this.x = parseInt(Math.random()*100-50);
-}
-
-
 
 class TopEnemy extends Enemy {
   constructor(x) {
     super(x)
-       this.x = this.speed + x;
+       this.x = this.position + x;
        console.log(this.x);
        this.y = 55;
        this.movement();
+       this.resetEnemy();
   }
 }
 class MiddleEnemy extends Enemy {
   constructor(x) {
     super(x)
-       this.x = this.speed + x;
-       this.movement();
+       this.x = this.position + x;
        this.y = 137;
+       this.movement();
   }
 }
 class BottomEnemy extends Enemy {
   constructor(x) {
     super(x)
-       this.x = this.speed + x;
+       this.x = this.position + x;
        this.y = 220;
        this.movement();
   }
@@ -164,41 +169,35 @@ const player = new Player;
 // make them move at random speen, when they get to x=500 reset them randomly
 
 const allEnemies = [];
-const numEnemies = 12;
+const numEnemies = 6;
 
  for (i = 0; i < numEnemies; i++) {
      setTimeout(function() {
          allEnemies[i] = new TopEnemy(0);
          i++;
-     }, i * 1000);
+     }, i * 3000);
      //enemy[i].push(allEnemies);
    }
  for (i = 0; i < numEnemies; i++) {
      setTimeout(function() {
          allEnemies[i] = new MiddleEnemy(100);
          i++;
-     }, i * 1000);
+     }, i * 3000);
      //enemy[i].push(allEnemies);
    }
  for (i = 0; i < numEnemies; i++) {
      setTimeout(function() {
          allEnemies[i] = new BottomEnemy(200);
          i++;
-     }, i * 1000);
+     }, i * 3000);
      //enemy[i].push(allEnemies);
    }
  console.log(allEnemies);
 
- allEnemies.forEach(function(elem) {
-   console.log(elem);
-   if (elem.this.x > 550) {
-     enemyReset();
-     elem.this.movement();
-   }
- });
+
+
 
 // detect player has reached the water
-
 function reachedWater() {
   //console.log(player.y);
   if (player.y == -15) {
