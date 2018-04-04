@@ -34,7 +34,7 @@ let gameIsRunning = true;
 
 
 var random_speed = () => {
-    return Math.floor(Math.random() * 10) + 5;
+    return Math.floor(Math.random() * 100) + 100;
 };
 
 var random_x = () => {
@@ -55,19 +55,18 @@ class Enemy {
     this.sprite = 'images/enemy-bug.png';
     this.position = parseInt(Math.random()*300-500);
   }
-  update() {
-    Enemy.prototype.update = function(dt) {
+  update(dt) {
+    // while (this.x <= 1010) {
+    //   setInterval( () => { this.x += 1 }, this.speed );
+    //   break;
+    // }
+    if (this.x > 600) {
+      loopEnemy();
     }
+    this.x += this.speed * dt;
   }
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-  }
-  // set the speed of the enemy
-  movement() {
-    while (this.x <= 1010) {
-      setInterval( () => { this.x += 1 }, this.speed );
-      break;
-    }
   }
 }
 //
@@ -101,9 +100,9 @@ class Enemy {
 // Loops the enemies when these reach the end of the canvas
   function loopEnemy() {
      allEnemies.forEach(function(bug) {
-       if (bug.x > 1010) {
+       if (bug.x > 600) {
          console.log(bug);
-         bug.x = parseInt(Math.random()*100-200);
+         bug.x = random_x();
          bug.y = random_y();
          bug.speed = random_speed();
        }
@@ -118,8 +117,8 @@ class Player {
     this.y = 400;
   }
   update(dt) {
-    var moveLeft = function() {
-      this.x = this.x - 100;
+    var moveLeft = () => {
+      this.x = this.x - 100 * dt;
     }
   }
   render() {
@@ -215,27 +214,28 @@ var create_enemies = (num) => {
       allEnemies.push(bug);
     }
 };
-create_enemies(10);
+create_enemies(6);
 
-//add movement to the bugs
-var counter = 0
-  function setDelay() {
-    setTimeout(() => {
-      allEnemies[counter].movement()
-      counter++
-      if (counter < allEnemies.length) { setDelay(); }
-    }, 1000);
-  }
+// //add movement to the bugs
+// var counter = 0
+//   function setDelay() {
+//     setTimeout(() => {
+//       //allEnemies[counter].update()
+//       counter++
+//       if (counter < allEnemies.length) { setDelay(); }
+//     }, 1000);
+//   }
+//
+//   setDelay();
 
-  setDelay();
-
-setInterval( () => {
-  allEnemies.forEach( bug => {
-    if (bug.x >= 1000 & gameIsRunning === true) {
-        loopEnemy();
-    }
-  })
-}, 1);
+// //function to loop enemies based on time
+// setInterval( () => {
+//   allEnemies.forEach( bug => {
+//     if (bug.x >= 1000 & gameIsRunning === true) {
+//         loopEnemy();
+//     }
+//   })
+// }, 1);
 
 
 // detect player has reached the water
@@ -248,12 +248,55 @@ const reachedWater = () => {
   }
 }
 
+// when coliding with a bug the player loses one life
+const die = () => {
+  lives -= 1;
+  player.resetPosition();
+  // check that lives are zero and return game over modal
+  if (lives + 1 === 1) {
+    console.log('game over!!!!')
+  }
+  livesElem.innerText = lives;
+}
+
 // collision detection function
 const detectCollision = (player, enemy) => {
   enemy.forEach( ( bug ) => {
-    if ( (player.x >= 0 && player.x <= 100 && player.y == 68) && (bug.x >= 0 && bug.x <= 100 && bug.y == 68) ) {
-        lives -= 1;
-        player.resetPosition();
+    // top row
+    if ( player.y == 68 && bug.y == 68 ) {
+      if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
+        die();
+      } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
+        die();
+      } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
+        die();
+      } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
+        die();
+      }
+    }
+    // middle row
+    if ( player.y == 151 && bug.y == 151 ) {
+      if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
+        die();
+      } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
+        die();
+      } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
+        die();
+      } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
+        die();
+      }
+    }
+    //bottom row
+    if ( player.y == 234 && bug.y == 234 ) {
+      if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
+        die();
+      } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
+        die();
+      } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
+        die();
+      } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
+        die();
+      }
     }
   });
 }
@@ -263,7 +306,7 @@ setInterval( () =>  {
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', e => {
     var allowedKeys = {
         37: 'left',
         38: 'up',
@@ -272,5 +315,4 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
-    console.log()
 });
