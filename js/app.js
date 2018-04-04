@@ -30,6 +30,7 @@ const livesElem = document.querySelector('#lives');
 let gotToWater = 0;
 let lives = 3;
 let score = 0;
+let gameIsRunning = true;
 
 
 var random_speed = () => {
@@ -37,11 +38,12 @@ var random_speed = () => {
 };
 
 var random_x = () => {
-    return Math.floor(Math.random() * (200)) - 500;
+    return Math.floor(Math.random() * (200)) - 300;
 };
 
 var random_y = () => {
-    var positions = [55, 137, 220];
+    // var positions = [55, 137, 220];
+    const positions = [68, 151, 234];
     return positions[Math.floor(Math.random() * 3)];
 };
 
@@ -62,57 +64,56 @@ class Enemy {
   }
   // set the speed of the enemy
   movement() {
-    while (this.x <= 550) {
+    while (this.x <= 1010) {
       setInterval( () => { this.x += 1 }, this.speed );
       break;
     }
   }
 }
+//
+// class TopEnemy extends Enemy {
+//   constructor(x) {
+//     super(x)
+//        this.x = this.position + x;
+//        console.log(this.x);
+//        this.y = 55;
+//        this.movement(this.speed);
+//
+//   }
+// }
+// class MiddleEnemy extends Enemy {
+//   constructor(x) {
+//     super(x)
+//        this.x = this.position + x;
+//        this.y = 137;
+//        this.movement();
+//   }
+// }
+// class BottomEnemy extends Enemy {
+//   constructor(x) {
+//     super(x)
+//        this.x = this.position + x;
+//        this.y = 220;
+//        this.movement();
+//   }
+// }
 
-class TopEnemy extends Enemy {
-  constructor(x) {
-    super(x)
-       this.x = this.position + x;
-       console.log(this.x);
-       this.y = 55;
-       this.movement(this.speed);
-       resetEnemy();
-  }
-}
-class MiddleEnemy extends Enemy {
-  constructor(x) {
-    super(x)
-       this.x = this.position + x;
-       this.y = 137;
-       this.movement();
-  }
-}
-class BottomEnemy extends Enemy {
-  constructor(x) {
-    super(x)
-       this.x = this.position + x;
-       this.y = 220;
-       this.movement();
-  }
-}
-
-// Reset the enemies when these reach the end of the canvas
-
-  function resetEnemy() {
-     allEnemies.forEach(function(enemy) {
-       console.log(enemy.x);
-       setTimeout(function() {
-       if (enemy.x > 550) {
-         enemy.x = parseInt(Math.random()*100-200);
+// Loops the enemies when these reach the end of the canvas
+  function loopEnemy() {
+     allEnemies.forEach(function(bug) {
+       if (bug.x > 1010) {
+         console.log(bug);
+         bug.x = parseInt(Math.random()*100-200);
+         bug.y = random_y();
+         bug.speed = random_speed();
        }
-     }, 5000);
    });
   }
-
 
 class Player {
   constructor(x, y) {
     this.sprite = 'images/char-boy.png';
+    this.position = 0;
     this.x = 200;
     this.y = 400;
   }
@@ -130,30 +131,30 @@ class Player {
   }
   handleInput(keyPress) {
     //console.log(keyPress);
-    console.log(this.x + '-' + this.y)
+    console.log('x: ' + this.x + ' y: ' + this.y)
     switch (keyPress) {
       case 'left':
         if (this.x > 0) {
-          detectCollision();
-          this.x -=101;
+          detectCollision(player, allEnemies);
+          this.x -=100;
         }
         break;
       case 'right':
         if (this.x < 400) {
-          detectCollision();
-          this.x +=101;
+          detectCollision(player, allEnemies);
+          this.x +=100;
           break;
         }
       case 'up':
         if (this.y > 0) {
-          detectCollision();
+          detectCollision(player, allEnemies);
           this.y -=83;
-          reachedWater()
+          reachedWater(player, allEnemies)
         }
         break;
       case 'down':
         if (this.y < 400) {
-          detectCollision();
+          detectCollision(player, allEnemies);
           this.y += 83;
         }
         break;
@@ -214,7 +215,7 @@ var create_enemies = (num) => {
       allEnemies.push(bug);
     }
 };
-create_enemies(5);
+create_enemies(10);
 
 //add movement to the bugs
 var counter = 0
@@ -228,10 +229,17 @@ var counter = 0
 
   setDelay();
 
+setInterval( () => {
+  allEnemies.forEach( bug => {
+    if (bug.x >= 1000 & gameIsRunning === true) {
+        loopEnemy();
+    }
+  })
+}, 1);
 
 
 // detect player has reached the water
-function reachedWater() {
+const reachedWater = () => {
   //console.log(player.y);
   if (player.y == -15) {
     score += 100;
@@ -240,18 +248,18 @@ function reachedWater() {
   }
 }
 
-// Write a collision detection function
-
-var detectCollision = function() {
-  allEnemies.forEach( enemy => {
-    if ( (enemy.y == player.y  ) || (enemy.x === player.x) ) {
-      lives -=1;
-      player.resetPosition();
-      livesElem.innerText = lives;
+// collision detection function
+const detectCollision = (player, enemy) => {
+  enemy.forEach( ( bug ) => {
+    if ( (player.x >= 0 && player.x <= 100 && player.y == 68) && (bug.x >= 0 && bug.x <= 100 && bug.y == 68) ) {
+        lives -= 1;
+        player.resetPosition();
     }
-  })
-
+  });
 }
+setInterval( () =>  {
+  detectCollision(player, allEnemies);
+}, 1)
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
