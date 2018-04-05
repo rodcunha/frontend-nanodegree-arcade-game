@@ -25,24 +25,25 @@
 //   }
 // };
 
-const scoreElem = document.querySelector('#score');
-const livesElem = document.querySelector('#lives');
+const scoreElem = document.querySelector('#score'); //html score element
+const livesElem = document.querySelector('#lives'); // html lives element
 let gotToWater = 0;
 let lives = 3;
 let score = 0;
 let gameIsRunning = true;
 
-
+// adds a random speed to the bugs
 var random_speed = () => {
     return Math.floor(Math.random() * 100) + 100;
 };
 
+// creates a random position within the x axis for the bugs outside of the canvas
 var random_x = () => {
-    return Math.floor(Math.random() * (200)) - 300;
+    return Math.floor(Math.random() * (900)) - 1000;
 };
 
+// create a random position on one of the three rows for the bugs
 var random_y = () => {
-    // var positions = [55, 137, 220];
     const positions = [68, 151, 234];
     return positions[Math.floor(Math.random() * 3)];
 };
@@ -56,10 +57,6 @@ class Enemy {
     this.position = parseInt(Math.random()*300-500);
   }
   update(dt) {
-    // while (this.x <= 1010) {
-    //   setInterval( () => { this.x += 1 }, this.speed );
-    //   break;
-    // }
     if (this.x > 600) {
       loopEnemy();
     }
@@ -112,14 +109,11 @@ class Enemy {
 class Player {
   constructor(x, y) {
     this.sprite = 'images/char-boy.png';
-    this.position = 0;
     this.x = 200;
     this.y = 400;
   }
   update(dt) {
-    var moveLeft = () => {
-      this.x = this.x - 100 * dt;
-    }
+
   }
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -214,7 +208,7 @@ var create_enemies = (num) => {
       allEnemies.push(bug);
     }
 };
-create_enemies(6);
+create_enemies(8);
 
 // //add movement to the bugs
 // var counter = 0
@@ -236,6 +230,52 @@ create_enemies(6);
 //     }
 //   })
 // }, 1);
+
+// Array of gem sprites
+const gemSprites = [
+  {
+    name: 'blue_gem',
+    sprite: 'images/Gem_Blue.png'
+  },
+  {
+    name: 'orange_gem',
+    sprite: 'images/Gem_Orange.png'
+  },
+  {
+    name: 'green_gem',
+    sprite: 'images/Gem_Green.png'
+  },
+  {
+    name: 'heart',
+    sprite: 'images/Heart.png'
+  }
+];
+
+const gemXLocation = [0, 100, 200, 300, 400];
+
+//Create the gems object (class)
+class Gem {
+  constructor() {
+    this.x = this.getXLocation(gemXLocation.length);
+    this.y = random_y();
+    this.sprite = this.getSprite(gemSprites.length);
+  }
+  getSprite(num) {
+    return gemSprites[Math.floor( Math.random() * Math.floor(num) )].sprite;
+  }
+  getXLocation(num) {
+    return gemXLocation[Math.floor( Math.random() * Math.floor(num) )];
+  }
+  timeOut() {
+
+  }
+  render() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
+  }
+}
+var gem1 = new Gem;
+console.log('Gem X: ' + gem1.x + ' Gem Y: ' + gem1.y + ' Sprite: ' + gem1.sprite);
+
 
 
 // detect player has reached the water
