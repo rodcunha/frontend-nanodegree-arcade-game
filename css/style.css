@@ -6,7 +6,17 @@ html {
 body {
     text-align: center;
     font-size: 17px;
-    font-family: sans-serif;
+    font-family: 'Montserrat Alternates', sans-serif;
+}
+
+h1, h3 {
+  font-weight: 700;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+h2, h4 {
+  font-weight: 300;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
 
 footer {
@@ -38,11 +48,22 @@ kbd {
   background:linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
 }
 
+.light {
+  font-weight: 300;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
 
 
 /* The Modal (background) */
 .modal {
-    display: none; /* Hidden by default */
+    display:none;
     position: fixed; /* Stay in place */
     z-index: 10; /* Sit on top */
     left: 0;
@@ -69,11 +90,34 @@ kbd {
     float: right;
     font-size: 28px;
     font-weight: bold;
+    transition: 0.3s;
 }
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: red;
     text-decoration: none;
     cursor: pointer;
+}
+
+.modal button {
+  font-size: 17px;
+  padding: 5px 20px;
+  background: linear-gradient('red', 'blue');
+}
+
+#start-game {
+  display:none;
+}
+
+#overlay {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #FFF;
+  background-color: rgba(255,255,255,0.8);
+  z-index: 1000;
+  display: none;
 }

@@ -1,32 +1,12 @@
 // // Enemies our player must avoid
-// var Enemy = function() {
-//     // Variables applied to each of our instances go here,
-//     // we've provided one for you to get started
-//
-//     // The image/sprite for our enemies, this uses
-//     // a helper we've provided to easily load images
-//     this.sprite = 'images/enemy-bug.png';
-// };
-//
-// // Update the enemy's position, required method for game
-// // Parameter: dt, a time delta between ticks
-// Enemy.prototype.update = function(dt) {
-//     // You should multiply any movement by the dt parameter
-//     // which will ensure the game runs at the same speed for
-//     // all computers.
-// };
-//
-// // Draw the enemy on the screen, required method for game
-// Enemy.prototype.render = function() {
-//   var topEnemy = function() {
-//     this.x = 0;
-//     this.y = 0;
-//     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-//   }
-// };
 
 const scoreElem = document.querySelector('#score'); //html score element
 const livesElem = document.querySelector('#lives'); // html lives element
+const startModal = document.querySelector('#start-game'); // start game Modal
+const gameCanvas = document.getElementsByTagName('canvas'); // selects the canvas element
+const span = document.getElementsByClassName("close")[0]; // close button of modal element
+const startBtn = document.querySelector('#btnStart');
+const allEnemies = []; // array to store the enemies
 let gotToWater = 0;
 let score = 0;
 let gameIsRunning = true;
@@ -47,6 +27,7 @@ var random_y = () => {
     return positions[Math.floor(Math.random() * 3)];
 };
 
+//create the Enemy object and assigns the values
 class Enemy {
   constructor() {
     this.x = random_x();
@@ -55,55 +36,27 @@ class Enemy {
     this.sprite = 'images/enemy-bug.png';
     this.position = parseInt(Math.random()*300-500);
   }
+  // loops the enemies on the canvas
   update(dt) {
     if (this.x > 600) {
-      loopEnemy();
+      this.loopEnemy();
     }
     this.x += this.speed * dt;
+  }
+  loopEnemy() {
+    allEnemies.forEach( bug => {
+      if (bug.x > 600) {
+        //console.log(bug); // logs the full object to the console.
+        bug.x = random_x();
+        bug.y = random_y();
+        bug.speed = random_speed();
+      }
+  });
   }
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
 }
-//
-// class TopEnemy extends Enemy {
-//   constructor(x) {
-//     super(x)
-//        this.x = this.position + x;
-//        console.log(this.x);
-//        this.y = 55;
-//        this.movement(this.speed);
-//
-//   }
-// }
-// class MiddleEnemy extends Enemy {
-//   constructor(x) {
-//     super(x)
-//        this.x = this.position + x;
-//        this.y = 137;
-//        this.movement();
-//   }
-// }
-// class BottomEnemy extends Enemy {
-//   constructor(x) {
-//     super(x)
-//        this.x = this.position + x;
-//        this.y = 220;
-//        this.movement();
-//   }
-// }
-
-// Loops the enemies when these reach the end of the canvas
-  function loopEnemy() {
-     allEnemies.forEach(function(bug) {
-       if (bug.x > 600) {
-         console.log(bug);
-         bug.x = random_x();
-         bug.y = random_y();
-         bug.speed = random_speed();
-       }
-   });
-  }
 
 class Player {
   constructor(x, y) {
@@ -112,6 +65,7 @@ class Player {
     this.y = 400;
     this.lives = 3
   }
+  //update the player
   update(dt) {
     for(var i =0; i< allEnemies.length;i++){
         if ( (this.y == allEnemies[i].y) && (this.x < allEnemies[i].x + 35) && (this.x > allEnemies[i].x - 20) ) {
@@ -119,132 +73,77 @@ class Player {
         }
     }
   }
+  // gain a life when collecting a heart
   gainLife() {
     this.lives +=1;
   }
+  // player loses a life when hit by a bug
   die() {
     this.lives -=1;
     this.resetPosition();
     // check that lives are zero and return game over modal
     if (player.lives + 1 === 1) {
-      console.log('game over!!!!')
+      console.log('game over!!!!');
     }
     showLives();
   }
+  //detects if the player has reached the water
+  reachedWater() {
+      score += 100;
+      showScore();
+      this.resetPosition();
+  }
+  //player wins the game
+  hasWon() {
+    if (score >= 1000) {
+
+      gameIsRunning = false;
+    }
+  }
+  //render the player on the HTML canvas
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
+  //reset the player position when reaching the water or getting killed by a bug
   resetPosition() {
     this.x = 200;
     this.y = 400;
   }
+  //handle the keypress
   handleInput(keyPress) {
     //console.log(keyPress);
+    player.hasWon();
     switch (keyPress) {
       case 'left':
         if (this.x > 0) {
-        //  detectCollision(player, allEnemies);
           this.x -=100;
         }
+        gems.getGem(player, gems);
         break;
       case 'right':
         if (this.x < 400) {
-        //  detectCollision(player, allEnemies);
           this.x +=100;
+          gems.getGem(player, gems);
           break;
         }
       case 'up':
         if (this.y > 0) {
-      //  detectCollision(player, allEnemies);
           this.y -=83;
-          reachedWater(player, allEnemies)
+          if (this.y < 68) {
+            this.reachedWater();
+          }
+          gems.getGem(player, gems);
         }
         break;
       case 'down':
         if (this.y < 400) {
-      //    detectCollision(player, allEnemies);
           this.y += 83;
+          gems.getGem(player, gems);
         }
         break;
     }
   }
 }
-
-const player = new Player;
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
-// create a random number of enemies between 15 and 20
-// iterate through them and instantiate the Enemies
-// assign them to the different rows y=100 y=200 y=300
-// make them move at random speen, when they get to x=500 reset them randomly
-
-const allEnemies = [];
-//const numEnemies = 2;
-
-
- // for (i = 0; i < numEnemies; i++) {
- //     setTimeout(function() {
- //         allEnemies[i] = new TopEnemy(0, enemySpeed);
- //         i++;
- //     }, i * 3000);
- //     //enemy[i].push(allEnemies);
- //   }
- // for (i = 0; i < numEnemies; i++) {
- //     setTimeout(function() {
- //         allEnemies[i] = new MiddleEnemy(100, enemySpeed);
- //         i++;
- //     }, i * 3000);
- //     //enemy[i].push(allEnemies);
- //   }
- // for (i = 0; i < numEnemies; i++) {
- //     setTimeout(function() {
- //         allEnemies[i] = new BottomEnemy(200, enemySpeed);
- //         i++;
- //     }, i * 3000);
- //     //enemy[i].push(allEnemies);
- //   }
- // console.log(allEnemies);
-
-
-
-var create_enemies = (num) => {
-  var bugs = num;
-
-  for (var i = 0; i < bugs; i++) {
-      var bug = new Enemy();
-      bug.speed = random_speed();
-      bug.y = random_y();
-      bug.x = random_x();
-
-      // push to array
-      allEnemies.push(bug);
-    }
-};
-create_enemies(8);
-
-// //add movement to the bugs
-// var counter = 0
-//   function setDelay() {
-//     setTimeout(() => {
-//       //allEnemies[counter].update()
-//       counter++
-//       if (counter < allEnemies.length) { setDelay(); }
-//     }, 1000);
-//   }
-//
-//   setDelay();
-
-// //function to loop enemies based on time
-// setInterval( () => {
-//   allEnemies.forEach( bug => {
-//     if (bug.x >= 1000 & gameIsRunning === true) {
-//         loopEnemy();
-//     }
-//   })
-// }, 1);
 
 // Array of gem sprites
 const gemSprites = [
@@ -270,7 +169,7 @@ const gemSprites = [
   }
 ];
 
-const gemXLocation = [0, 100, 200, 300, 400];
+const gemXLocation = [0, 100, 200, 300, 400, -100]; // possible x locations for the gems minus 100 means that one location is off canvas
 //Create the gems object (class)
 class Gem {
   constructor() {
@@ -278,12 +177,15 @@ class Gem {
     this.y = random_y();
     this.sprite = this.getSprite(gemSprites.length);
   }
+  // gets a random gem sprite
   getSprite(num) {
     return gemSprites[Math.floor( Math.random() * Math.floor(num) )].sprite;
   }
+  //gets a random location for x
   getXLocation(num) {
     return gemXLocation[Math.floor( Math.random() * Math.floor(num) )];
   }
+  // issues the score
   gemPoints(sprite) {
     if ( sprite == 'images/Heart.png') {
       player.gainLife();
@@ -302,11 +204,13 @@ class Gem {
       this.clearGem();
     }
   }
+  // checks if the player and the gem are in the same square and calls the points method
   getGem(player, gems) {
     if ( player.y ==  this.y && player.x == this.x ) {
       this.gemPoints(this.sprite);
     }
   }
+  //sends the gem off screen and updates the score and lives
   clearGem() {
     this.x = -100;
     this.y = -100;
@@ -318,13 +222,81 @@ class Gem {
   }
 }
 
-// create a gem every 4 seconds at a random location.
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+// Place the player object in a variable called player
+
+// create a random number of enemies between 15 and 20
+// iterate through them and instantiate the Enemies
+// assign them to the different rows y=100 y=200 y=300
+// make them move at random speen, when they get to x=500 reset them randomly
+
+// create the enemies
+var create_enemies = (num) => {
+  var bugs = num;
+
+  for (var i = 0; i < bugs; i++) {
+      var bug = new Enemy();
+      bug.speed = random_speed();
+      bug.y = random_y();
+      bug.x = random_x();
+
+      // push to array
+      allEnemies.push(bug);
+    }
+};
+
+
+//modal trigger on load
+window.onload = () => {
+    startModal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    startModal.style.display = "none";
+}
+
+//
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == startModal) {
+        startModal.style.display = "none";
+    }
+}
+
+let player = new Player;
 let gems = new Gem;
 
-setInterval( () => {
+// start game function
+function startGame() {
+  startModal.style.display = "none";
+  score = 0;
+  lives = 3;
+  gameIsRunning = true;
+
+  player = new Player(); // creates a new player object
+  player.render();
+
+  // create a gem every 4 seconds at a random location.
   gems = new Gem;
-  console.log('Gem X: ' + gems.x + ' Gem Y: ' + gems.y + ' Sprite: ' + gems.sprite);
-}, 4000);
+  gems.render();
+
+  setInterval( () => {
+    gems = new Gem;
+  //  console.log('Gem X: ' + gems.x + ' Gem Y: ' + gems.y + ' Sprite: ' + gems.sprite);
+  }, 4000);
+
+  create_enemies(8);
+
+  showLives();
+  showScore();
+
+
+
+}
+
 
 
 // Display the score on the header
@@ -332,65 +304,12 @@ const showScore = () => {
    scoreElem.innerText = score;
 }
 
+// display the number of lives of the player
 const showLives = () => {
   livesElem.innerText = player.lives;
 }
 
-// detect player has reached the water
-const reachedWater = () => {
-  //console.log(player.y);
-  if (player.y == -15) {
-    score += 100;
-    showScore();
-    player.resetPosition();
-  }
-}
 
-// // collision detection function
-// const detectCollision = (player, enemy) => {
-//   enemy.forEach( ( bug ) => {
-//     // top row
-//     if ( player.y == 68 && bug.y == 68 ) {
-//       if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
-//         player.die();
-//       } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
-//         player.die();
-//       } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
-//         player.die();
-//       } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
-//         player.die();
-//       }
-//     }
-//     // middle row
-//     if ( player.y == 151 && bug.y == 151 ) {
-//       if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
-//         player.die();
-//       } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
-//         player.die();
-//       } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
-//         player.die();
-//       } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
-//         player.die();
-//       }
-//     }
-//     //bottom row
-//     if ( player.y == 234 && bug.y == 234 ) {
-//       if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
-//         player.die();
-//       } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
-//         player.die();
-//       } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
-//         player.die();
-//       } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
-//         player.die();
-//       }
-//     }
-//   });
-// }
- setInterval( () =>  {
-//   detectCollision(player, allEnemies);
-   gems.getGem(player, gems);
-  }, 1)
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
