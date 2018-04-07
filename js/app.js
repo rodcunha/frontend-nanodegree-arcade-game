@@ -28,7 +28,6 @@
 const scoreElem = document.querySelector('#score'); //html score element
 const livesElem = document.querySelector('#lives'); // html lives element
 let gotToWater = 0;
-let lives = 3;
 let score = 0;
 let gameIsRunning = true;
 
@@ -111,9 +110,26 @@ class Player {
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
+    this.lives = 3
   }
   update(dt) {
-
+    for(var i =0; i< allEnemies.length;i++){
+        if ( (this.y == allEnemies[i].y) && (this.x < allEnemies[i].x + 35) && (this.x > allEnemies[i].x - 20) ) {
+          this.die();
+        }
+    }
+  }
+  gainLife() {
+    this.lives +=1;
+  }
+  die() {
+    this.lives -=1;
+    this.resetPosition();
+    // check that lives are zero and return game over modal
+    if (player.lives + 1 === 1) {
+      console.log('game over!!!!')
+    }
+    showLives();
   }
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -124,30 +140,29 @@ class Player {
   }
   handleInput(keyPress) {
     //console.log(keyPress);
-    console.log('x: ' + this.x + ' y: ' + this.y)
     switch (keyPress) {
       case 'left':
         if (this.x > 0) {
-          detectCollision(player, allEnemies);
+        //  detectCollision(player, allEnemies);
           this.x -=100;
         }
         break;
       case 'right':
         if (this.x < 400) {
-          detectCollision(player, allEnemies);
+        //  detectCollision(player, allEnemies);
           this.x +=100;
           break;
         }
       case 'up':
         if (this.y > 0) {
-          detectCollision(player, allEnemies);
+      //  detectCollision(player, allEnemies);
           this.y -=83;
           reachedWater(player, allEnemies)
         }
         break;
       case 'down':
         if (this.y < 400) {
-          detectCollision(player, allEnemies);
+      //    detectCollision(player, allEnemies);
           this.y += 83;
         }
         break;
@@ -246,13 +261,16 @@ const gemSprites = [
     sprite: 'images/Gem_Green.png'
   },
   {
+    name: 'green_gem',
+    sprite: 'images/Star.png'
+  },
+  {
     name: 'heart',
     sprite: 'images/Heart.png'
   }
 ];
 
 const gemXLocation = [0, 100, 200, 300, 400];
-
 //Create the gems object (class)
 class Gem {
   constructor() {
@@ -266,83 +284,113 @@ class Gem {
   getXLocation(num) {
     return gemXLocation[Math.floor( Math.random() * Math.floor(num) )];
   }
-  timeOut() {
-
+  gemPoints(sprite) {
+    if ( sprite == 'images/Heart.png') {
+      player.gainLife();
+      this.clearGem();
+    } else if (sprite == 'images/Gem_Blue.png') {
+      score += 10;
+      this.clearGem();
+    } else if ( sprite == 'images/Gem_Green.png') {
+      score += 20;
+      this.clearGem();
+    } else if ( sprite == 'images/Gem_Orange.png') {
+      score += 30;
+      this.clearGem();
+    } else if (sprite == 'images/Star.png') {
+      score += 50;
+      this.clearGem();
+    }
+  }
+  getGem(player, gems) {
+    if ( player.y ==  this.y && player.x == this.x ) {
+      this.gemPoints(this.sprite);
+    }
+  }
+  clearGem() {
+    this.x = -100;
+    this.y = -100;
+    showScore();
+    showLives();
   }
   render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
 }
-var gem1 = new Gem;
-console.log('Gem X: ' + gem1.x + ' Gem Y: ' + gem1.y + ' Sprite: ' + gem1.sprite);
+
+// create a gem every 4 seconds at a random location.
+let gems = new Gem;
+
+setInterval( () => {
+  gems = new Gem;
+  console.log('Gem X: ' + gems.x + ' Gem Y: ' + gems.y + ' Sprite: ' + gems.sprite);
+}, 4000);
 
 
+// Display the score on the header
+const showScore = () => {
+   scoreElem.innerText = score;
+}
+
+const showLives = () => {
+  livesElem.innerText = player.lives;
+}
 
 // detect player has reached the water
 const reachedWater = () => {
   //console.log(player.y);
   if (player.y == -15) {
     score += 100;
-    scoreElem.innerText = score;
+    showScore();
     player.resetPosition();
   }
 }
 
-// when coliding with a bug the player loses one life
-const die = () => {
-  lives -= 1;
-  player.resetPosition();
-  // check that lives are zero and return game over modal
-  if (lives + 1 === 1) {
-    console.log('game over!!!!')
-  }
-  livesElem.innerText = lives;
-}
-
-// collision detection function
-const detectCollision = (player, enemy) => {
-  enemy.forEach( ( bug ) => {
-    // top row
-    if ( player.y == 68 && bug.y == 68 ) {
-      if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
-        die();
-      } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
-        die();
-      } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
-        die();
-      } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
-        die();
-      }
-    }
-    // middle row
-    if ( player.y == 151 && bug.y == 151 ) {
-      if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
-        die();
-      } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
-        die();
-      } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
-        die();
-      } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
-        die();
-      }
-    }
-    //bottom row
-    if ( player.y == 234 && bug.y == 234 ) {
-      if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
-        die();
-      } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
-        die();
-      } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
-        die();
-      } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
-        die();
-      }
-    }
-  });
-}
-setInterval( () =>  {
-  detectCollision(player, allEnemies);
-}, 1)
+// // collision detection function
+// const detectCollision = (player, enemy) => {
+//   enemy.forEach( ( bug ) => {
+//     // top row
+//     if ( player.y == 68 && bug.y == 68 ) {
+//       if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
+//         player.die();
+//       } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
+//         player.die();
+//       } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
+//         player.die();
+//       } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
+//         player.die();
+//       }
+//     }
+//     // middle row
+//     if ( player.y == 151 && bug.y == 151 ) {
+//       if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
+//         player.die();
+//       } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
+//         player.die();
+//       } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
+//         player.die();
+//       } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
+//         player.die();
+//       }
+//     }
+//     //bottom row
+//     if ( player.y == 234 && bug.y == 234 ) {
+//       if ( player.x >=0 && player.x < 100 && bug.x >=0 && bug.x <100 ) {
+//         player.die();
+//       } else if ( player.x >=100 && player.x < 200 && bug.x >=100 && bug.x <200 ) {
+//         player.die();
+//       } else if ( player.x >=200 && player.x < 300 && bug.x >=200 && bug.x <300 ) {
+//         player.die();
+//       } else if ( player.x >=300 && player.x < 400 && bug.x >=300 && bug.x <400 ) {
+//         player.die();
+//       }
+//     }
+//   });
+// }
+ setInterval( () =>  {
+//   detectCollision(player, allEnemies);
+   gems.getGem(player, gems);
+  }, 1)
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
