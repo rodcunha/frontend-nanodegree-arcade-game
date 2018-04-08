@@ -127,13 +127,13 @@ class Player extends Element { // Create the Player class as an extension of Ele
           if (this.x > 0) {
             this.x -=100;
           }
-          gems.getGem(player, gems);
+          gems.getGem(this, gems);
           break;
         case 'right':
           if (this.x < 399) {
             this.x +=100;
           }
-          gems.getGem(player, gems);
+          gems.getGem(this, gems);
           break
         case 'up':
           if (this.y > 0) {
@@ -141,13 +141,13 @@ class Player extends Element { // Create the Player class as an extension of Ele
             if (this.y < 68) {
               this.reachedWater();
             }
-            gems.getGem(player, gems);
+            gems.getGem(this, gems);
           }
           break;
         case 'down':
           if (this.y < 399) {
             this.y += 83;
-            gems.getGem(player, gems);
+            gems.getGem(this, gems);
           }
           break;
       }
