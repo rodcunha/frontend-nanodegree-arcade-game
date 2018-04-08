@@ -89,7 +89,7 @@ class Player extends Element { // Create the Player class as an extension of Ele
        closeModal();
        setTimeout( () => {
           showLooseModal();
-       }, 50)
+       }, 30)
     }
     showLives();
   }
@@ -108,7 +108,7 @@ class Player extends Element { // Create the Player class as an extension of Ele
       closeModal();
       setTimeout( () => {
         showWinModal();
-      },50);
+      },30);
     }
   }
   //reset the player position when reaching the water or getting killed by a bug
@@ -131,11 +131,11 @@ class Player extends Element { // Create the Player class as an extension of Ele
           gems.getGem(player, gems);
           break;
         case 'right':
-          if (this.x < 400) {
+          if (this.x < 399) {
             this.x +=100;
-            gems.getGem(player, gems);
-            break;
           }
+          gems.getGem(player, gems);
+          break
         case 'up':
           if (this.y > 0) {
             this.y -=83;
@@ -146,7 +146,7 @@ class Player extends Element { // Create the Player class as an extension of Ele
           }
           break;
         case 'down':
-          if (this.y < 400) {
+          if (this.y < 399) {
             this.y += 83;
             gems.getGem(player, gems);
           }
