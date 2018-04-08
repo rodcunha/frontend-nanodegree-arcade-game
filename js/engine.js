@@ -151,11 +151,12 @@ var Engine = (function(global) {
          * the render function you have defined.
          */
         allEnemies.forEach(function(enemy) {
+          console.log(enemy)
             enemy.render();
         });
 
-        player.render();
-        gems.render();
+         player.render();
+         gems.render();
     }
 
     /* This function does nothing but it could have been a good place to

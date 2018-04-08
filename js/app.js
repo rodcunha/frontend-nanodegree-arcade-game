@@ -6,6 +6,7 @@ const startModal = document.querySelector('#start-game'); // start game Modal
 const gameCanvas = document.getElementsByTagName('canvas'); // selects the canvas element
 const span = document.getElementsByClassName("close")[0]; // close button of modal element
 const startBtn = document.querySelector('#btnStart');
+const enemySprite = 'images/enemy-bug.png';
 const allEnemies = []; // array to store the enemies
 let gotToWater = 0;
 let score = 0;
@@ -27,13 +28,26 @@ var random_y = () => {
     return positions[Math.floor(Math.random() * 3)];
 };
 
+// create the super class for all the elements of the game
+class Element {
+  constructor(x, y, sprite) {
+    this.x = x;
+    this.y = y;
+    this.sprite = sprite;
+  }
+  render() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  }
+}
+
 //create the Enemy object and assigns the values
-class Enemy {
-  constructor() {
-    this.x = random_x();
-    this.y = random_y();
+class Enemy extends Element {
+  constructor(x, y, sprite) {
+    super(x, y, sprite);
+    // this.x = random_x();
+    // this.y = random_y();
     this.speed = random_speed();
-    this.sprite = 'images/enemy-bug.png';
+    // this.sprite = 'images/enemy-bug.png';
     this.position = parseInt(Math.random()*300-500);
   }
   // loops the enemies on the canvas
@@ -58,12 +72,11 @@ class Enemy {
   }
 }
 
-class Player {
-  constructor(x, y) {
-    this.sprite = 'images/char-boy.png';
-    this.x = 200;
-    this.y = 400;
-    this.lives = 3
+// Create the Player class
+class Player extends Element {
+  constructor(x, y, sprite) {
+    super(x, y, sprite);
+    this.lives = 3;
   }
   //update the player
   update(dt) {
@@ -99,10 +112,6 @@ class Player {
 
       gameIsRunning = false;
     }
-  }
-  //render the player on the HTML canvas
-  render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
   //reset the player position when reaching the water or getting killed by a bug
   resetPosition() {
@@ -169,22 +178,29 @@ const gemSprites = [
   }
 ];
 
+const gemImage = gemSprites[Math.floor( Math.random() * Math.floor(gemSprites.length) )].sprite;;
 const gemXLocation = [0, 100, 200, 300, 400, -100]; // possible x locations for the gems minus 100 means that one location is off canvas
+const gemRandomX = gemXLocation.length;
+const getXLocation = (num) => {
+  return gemXLocation[Math.floor( Math.random() * Math.floor(num) )];
+}
+
 //Create the gems object (class)
-class Gem {
-  constructor() {
-    this.x = this.getXLocation(gemXLocation.length);
-    this.y = random_y();
-    this.sprite = this.getSprite(gemSprites.length);
+class Gem extends Element {
+  constructor(x, y, sprite) {
+    super(x, y, sprite);
+    // this.x = this.getXLocation(gemRandomX);
+    // this.y = random_y();
+    // this.sprite = this.getSprite(gemImage);
   }
   // gets a random gem sprite
-  getSprite(num) {
-    return gemSprites[Math.floor( Math.random() * Math.floor(num) )].sprite;
-  }
+  // getSprite(num) {
+  //   return gemSprites[Math.floor( Math.random() * Math.floor(num) )].sprite;
+  // }
   //gets a random location for x
-  getXLocation(num) {
-    return gemXLocation[Math.floor( Math.random() * Math.floor(num) )];
-  }
+  // getXLocation(num) {
+  //   return gemXLocation[Math.floor( Math.random() * Math.floor(num) )];
+  // }
   // issues the score
   gemPoints(sprite) {
     if ( sprite == 'images/Heart.png') {
@@ -236,10 +252,10 @@ var create_enemies = (num) => {
   var bugs = num;
 
   for (var i = 0; i < bugs; i++) {
-      var bug = new Enemy();
+      var bug = new Enemy(random_x(), random_y(), enemySprite);
       bug.speed = random_speed();
-      bug.y = random_y();
-      bug.x = random_x();
+      // bug.y = random_y();
+      // bug.x = random_x();
 
       // push to array
       allEnemies.push(bug);
@@ -275,26 +291,25 @@ function startGame() {
   score = 0;
   lives = 3;
   gameIsRunning = true;
+  create_enemies(8);
 
-  player = new Player(); // creates a new player object
+
+  player = new Player(200, 400, 'images/char-boy.png'); // creates a new player object
+  //console.log(player);
   player.render();
 
   // create a gem every 4 seconds at a random location.
-  gems = new Gem;
+  gems = new Gem((gemRandomX), random_y(), gemImage);
+  //console.log('gemx: ' + gems.x + 'gemy: ' + gems.y + ' gemsprite: ' + gems.sprite);
   gems.render();
 
   setInterval( () => {
-    gems = new Gem;
+    gems = new Gem(getXLocation(gemRandomX), random_y(), gemImage);
   //  console.log('Gem X: ' + gems.x + ' Gem Y: ' + gems.y + ' Sprite: ' + gems.sprite);
   }, 4000);
 
-  create_enemies(8);
-
   showLives();
   showScore();
-
-
-
 }
 
 
