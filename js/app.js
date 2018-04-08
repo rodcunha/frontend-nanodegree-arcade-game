@@ -5,8 +5,6 @@ const gameWinModal = document.querySelector('#game-win'); // win game modal
 const gameLooseModal = document.querySelector('#game-over'); // game over modal
 const gameModal = document.querySelectorAll('.modal'); // start game Modal
 const gameCanvas = document.getElementsByTagName('canvas'); // selects the canvas element
-const startBtn = document.querySelector('#btnStart');
-const closeBtn = document.querySelectorAll('.btnClose');
 const enemySprite = 'images/enemy-bug.png'; // enemy image
 let allEnemies = []; // array to store the enemies
 let gotToWater = 0;
@@ -239,7 +237,7 @@ class Gem extends Element {
 }
 
 // Instantiate the enemies function
-var create_enemies = (num) => {
+const create_enemies = (num) => {
 
   for (var i = 0; i < num; i++) {
       var bug = new Enemy(random_x(), random_y(), enemySprite);
