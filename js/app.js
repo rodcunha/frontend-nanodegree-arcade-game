@@ -83,7 +83,6 @@ class Player extends Element { // Create the Player class as an extension of Ele
     pulsate(livesElem);
     this.resetPosition();
     // check that lives are zero and return game over modal
-    console.log(this.lives);
     if (this.lives +1 === 1) {
        console.log('GAME OVER!!!!!');
        gameIsRunning = false;
@@ -295,7 +294,6 @@ function startGame() {
 }
 
 // create a gem every 4 seconds at a random location.
-
 const randomGem = () => {
   if (!isIntervalRunning) {
      isIntervalRunning = true;
@@ -327,6 +325,5 @@ document.addEventListener('keyup', e => {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });

@@ -1,11 +1,35 @@
-frontend-nanodegree-arcade-game
-===============================
+# Frogger Arcade Game
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+## HOW TO PLAY
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+### Gameplay
 
+To play this game you will use your keyboard. Start the game by clicking the start game button and then use your arrow keys to move the player in the game board.
 
-** Sources
-Asteroid Image - Computer-generated Illustration (Credit: NASA/GSFC/UA)
-Rocket Illustration - Pixabay Free Illustration
+### Objectives
+
+To win the game you will have to reach 1000 or more points.
+
+You will win points by collecting Gems and reaching the water.
+
+Blue Gem = 10 points
+Green Gem = 20 points
+Orange Gem = 30 points
+Star = 50 points
+Reach the water = 100 points
+
+### Lives
+
+You will start the game with 3 lives, you can win lives by collecting hearts.
+
+If your lives get to zero before you reach 1000 points you lose the game.
+
+Avoid the bugs in order not to die.
+
+### Safe areas
+
+The green areas are safe areas. You can move freely on those areas without dying.
+
+### The bugs
+
+The game has bugs that will kill you. They come at random speeds and locations. Beware.
