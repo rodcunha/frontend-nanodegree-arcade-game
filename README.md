@@ -6,6 +6,8 @@
 
 To play this game you will use your keyboard. Start the game by clicking the start game button and then use your arrow keys to move the player in the game board.
 
+To play the game [Click Here.](https://rodcunha.github.io/arcade-game)
+
 ### Objectives
 
 To win the game you will have to reach 1000 or more points.

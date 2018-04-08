@@ -105,7 +105,6 @@ class Player extends Element { // Create the Player class as an extension of Ele
   hasWon() {
     if (score >= 1000) {
       gameIsRunning = false;
-      closeModal();
       setTimeout( () => {
         showWinModal();
       },30);
@@ -122,7 +121,7 @@ class Player extends Element { // Create the Player class as an extension of Ele
       showStartModal();
       this.resetPosition();
     } else {
-      player.hasWon();
+      this.hasWon();
       switch (keyPress) {
         case 'left':
           if (this.x > 0) {
