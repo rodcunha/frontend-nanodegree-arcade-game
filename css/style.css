@@ -48,6 +48,28 @@ kbd {
   background:linear-gradient(left, #ffffff 0%, #e2e2e2 25%);
 }
 
+button {
+  padding: 8px 16px;
+  border: 1px solid white;
+  border-radius: 4px;
+  background: #BBDEFB;
+  font-size: 1em;
+}
+
+button.restart {
+  position: relative;
+  clear: both;
+  margin: 0 auto;
+  margin-top: 50px;
+  display: block;
+  background: linear-gradient(to right, #E0F2F1, #BBDEFB);
+  transition: 0.4s;
+}
+
+button.restart:hover {
+  background: linear-gradient(to right, ##80CBC4, ##2196F3);
+}
+
 .light {
   font-weight: 300;
 }
@@ -70,7 +92,7 @@ kbd {
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
+    overflow: none; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
@@ -78,10 +100,11 @@ kbd {
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 5% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
+    height: 75%;
 }
 
 /* The Close Button */
@@ -120,4 +143,22 @@ kbd {
   background-color: rgba(255,255,255,0.8);
   z-index: 1000;
   display: none;
+}
+
+.pulsate {
+    font-weight: 700;
+    -webkit-animation: pulsate 0.5s ease-out;
+    -webkit-animation-iteration-count: infinite;
+    opacity: 0.5;
+}
+@-webkit-keyframes pulsate {
+    0% {
+        opacity: 0.0;
+    }
+    50% {
+        opacity: 1.0;
+    }
+    100% {
+        opacity: 0.;
+    }
 }
