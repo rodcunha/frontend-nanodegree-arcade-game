@@ -5,7 +5,6 @@ const gameWinModal = document.querySelector('#game-win'); // win game modal
 const gameLooseModal = document.querySelector('#game-over'); // game over modal
 const gameModal = document.querySelectorAll('.modal'); // start game Modal
 const gameCanvas = document.getElementsByTagName('canvas'); // selects the canvas element
-const span = document.getElementsByClassName("close")[0]; // close button of modal element
 const startBtn = document.querySelector('#btnStart');
 const closeBtn = document.querySelectorAll('.btnClose');
 const enemySprite = 'images/enemy-bug.png'; // enemy image
@@ -14,24 +13,20 @@ let gotToWater = 0;
 let score = 0;
 let gameIsRunning = false;
 
-// adds a random speed to the bugs
-var random_speed = () => {
+var random_speed = () => { // adds a random speed to the bugs
     return Math.floor(Math.random() * 100) + 100;
 };
 
-// creates a random position within the x axis for the bugs outside of the canvas
-var random_x = () => {
+var random_x = () => { // creates a random position within the x axis for the bugs outside of the canvas
     return Math.floor(Math.random() * (900)) - 1000;
 };
 
-// create a random position on one of the three rows for the bugs
-var random_y = () => {
+var random_y = () => { // create a random position on one of the three rows for the bugs
     const positions = [68, 151, 234];
     return positions[Math.floor(Math.random() * 3)];
 };
 
-// create the super class for all the elements of the game
-class Element {
+class Element { // create the super class for all the elements of the game
   constructor(x, y, sprite) {
     this.x = x;
     this.y = y;
@@ -42,14 +37,12 @@ class Element {
   }
 }
 
-//create the Enemy object and assigns the values
-class Enemy extends Element {
+class Enemy extends Element { //create the Enemy object and assigns the values
   constructor(x, y, sprite) {
     super(x, y, sprite);
     this.speed = random_speed();
     this.position = parseInt(Math.random()*300-500);
   }
-  // loops the enemies on the canvas
   update(dt) {
     if (this.x > 600) {
       this.loopEnemy();
@@ -67,8 +60,7 @@ class Enemy extends Element {
   }
 }
 
-// Create the Player class
-class Player extends Element {
+class Player extends Element { // Create the Player class as an extension of Element
   constructor(x, y, sprite) {
     super(x, y, sprite);
     this.lives = 3;
@@ -94,8 +86,11 @@ class Player extends Element {
     console.log(this.lives);
     if (this.lives +1 === 1) {
        console.log('GAME OVER!!!!!');
+       gameIsRunning = false;
        closeModal();
-       showLooseModal();
+       setTimeout( () => {
+          showLooseModal();
+       }, 50)
     }
     showLives();
   }
@@ -111,7 +106,10 @@ class Player extends Element {
   hasWon() {
     if (score >= 1000) {
       gameIsRunning = false;
-      showWinModal();
+      closeModal();
+      setTimeout( () => {
+        showWinModal();
+      },50);
     }
   }
   //reset the player position when reaching the water or getting killed by a bug
