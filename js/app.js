@@ -89,7 +89,7 @@ class Player extends Element { // Create the Player class as an extension of Ele
        closeModal();
        setTimeout( () => {
           showLooseModal();
-       }, 30)
+       }, 30);
     }
     showLives();
   }
@@ -185,14 +185,14 @@ const gemRandomX = gemXLocation.length;
 
 const getXLocation = (num) => {
   return gemXLocation[Math.floor( Math.random() * Math.floor(num) )];
-}
+};
 
 const pulsate = (elem) => {
     elem.classList.add('pulsate');
   setTimeout( () => {
     elem.classList.remove('pulsate');
   }, 3000);
-}
+};
 
 //Create the gems object (class)
 class Gem extends Element {
@@ -255,23 +255,23 @@ const closeModal = () => {
     player =new Player(-100, -100, 'images/char-boy.png');
     gems = new Gem(-99,-99,  gemImage);
   });
-}
+};
 
-const showStartModal = () => { startModal.style.display = "block"; }
-const showWinModal = () => { gameWinModal.style.display = "block"; }
-const showLooseModal = () => { gameLooseModal.style.display = "block"; }
+const showStartModal = () => { startModal.style.display = "block"; };
+const showWinModal = () => { gameWinModal.style.display = "block"; };
+const showLooseModal = () => { gameLooseModal.style.display = "block"; };
 
 //modal trigger on load
 window.onload = () => {
     showStartModal();
-}
+};
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = event => {
     if (event.target == startModal) {
         closeModal();
     }
-}
+};
 
 let player = new Player(200, 400, 'images/char-boy.png');
 let gems = new Gem(getXLocation(gemRandomX), random_y(), gemImage);
@@ -290,7 +290,7 @@ function startGame() {
   showLives();
   showScore();
   isIntervalRunning ? setTimeout( () => {isIntervalRunning = false}, 4001) : randomGem();
-}
+};
 
 // create a gem every 4 seconds at a random location.
 const randomGem = () => {
@@ -303,17 +303,17 @@ const randomGem = () => {
   } else {
     setTimeout( () => {isIntervalRunning = false}, 4000);
   }
-}
+};
 
 // Display the score on the header
 const showScore = () => {
    scoreElem.innerText = score;
-}
+};
 
 // display the number of lives of the player
 const showLives = () => {
   livesElem.innerText = player.lives;
-}
+};
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
