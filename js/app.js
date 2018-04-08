@@ -1,3 +1,5 @@
+'use strict';
+
 const scoreElem = document.querySelector('#score'); //html score element
 const livesElem = document.querySelector('#lives'); // html lives element
 const startModal = document.querySelector('#start-game'); // starter modal
@@ -48,13 +50,16 @@ class Enemy extends Element { //create the Enemy object and assigns the values
     this.x += this.speed * dt;
   }
   loopEnemy() {
-    allEnemies.forEach( bug => {
-      if (bug.x > 600) {
-        bug.x = random_x();
-        bug.y = random_y();
-        bug.speed = random_speed();
-      }
-  });
+  //   allEnemies.forEach( bug => {
+  //     if (bug.x > 600) {
+  //       bug.x = random_x();
+  //       bug.y = random_y();
+  //       bug.speed = random_speed();
+  //     }
+  // });
+         this.x = random_x();
+         this.y = random_y();
+         this.speed = random_speed();
   }
 }
 
@@ -245,6 +250,12 @@ const create_enemies = (num) => {
       allEnemies.push(bug); // push to the enemies array
     }
 };
+
+allEnemies.forEach( e => {
+  if (e.x >= 550) {
+    e.loopEnemy();
+  }
+})
 
 const closeModal = () => {
   gameModal.forEach( e => {
